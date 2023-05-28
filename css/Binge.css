@@ -1,0 +1,16 @@
+body{
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#grid img {
+    width: 200px;
+}
+
+#grid{
+    display: grid;
+}
+
+#grid div{
+    display: grid;
+}
