@@ -115,21 +115,33 @@ let postdata = [{
 
 router.get('/posts.json', function(req, res,next){
 
+  let results = db.query('SELECT Post.id Post.created, Post.content, user.display_name, Post.title, Post.answer FROM Post INNER JOIN User on POst.author = User.id;', function(result){
+    res.json(result);
+  });
 
-  res.json(postdata);
+
 });
 
 
 router.post('/newpost', function(req, res,next){
-  let post = req.body;
+  /*let post = req.body;
   post.upvotes = 0;
   post.url = '#',
   post.timestamp = new Date().toISOString();
 
-  postdata.push(post);
+  postdata.push(post);*/
 
   /* terminate request */
-  res.end();
+  /*res.end();*/
+  db.query(`
+  INSERT INTO Post VALUES (
+    ?,
+    CURRENT_TIMESTAMP(),
+    ?,
+    ?,
+    ?,
+    NULL
+  );`[0, 'Title', 'some content', 1]`)
 });
 
 module.exports = router;
