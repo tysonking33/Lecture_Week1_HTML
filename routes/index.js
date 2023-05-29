@@ -58,15 +58,40 @@ router.post('/login', async function (req, res, next) {
 
     } else if ('username' in req.body && 'password' in req.body) {
 
-        if (req.body.username in users && users[req.body.username].password === req.body.password) {
-            // There is a user
-            req.session.user = users[req.body.username];
-            console.log(req.body.username);
-            res.json(req.session.user);
-        } else {
-            // No user
-            res.sendStatus(401);
-        }
+
+        req.pool.getConnection(function(err, connection){
+            if (cerr){
+                res.sendStatus(500);
+                return;
+            }
+
+            /* making a qurey */
+            let query = "SELECT id, handle, pass, avatar, email, display_name FROM Users WHERE handle = ? and pass = ?";
+
+            connection.query(query, [req.body.username, req.body.password], function(err, results, fields){
+
+                connection.release();
+
+
+                if (qerr){
+                    res.sendStatus(500);
+                    return;
+                }
+
+
+                if (rows.length > 0){
+                    //there is a user
+                    [req.session.user] = rows;
+
+                    res.json(req.session.user);
+                }
+                else{
+                    //no user
+                    res.sendStatus(401);
+                }
+
+            });
+        });
 
     } else {
         res.sendStatus(401);
