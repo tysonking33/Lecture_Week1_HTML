@@ -7,13 +7,17 @@ router.get('/', function(req, res, next) {
 });
 
 let counter = 0;
-router.get('/test', function(req,res,next){
-  res.send('this is some text ' + counter);
+
+// Send some text
+router.get('/test', function (req,res,next) {
+  res.send('This is some text '+counter);
   counter++;
-  console.log('this is a message ' + counter);
+  console.log('This is a message: '+counter);
 });
 
-router.get('/apage', function(req, res,next){
+// Send an entire webpage
+router.get('/apage', function(req,res,next){
+
   let postdata = `<div class="post">
 
       <div class="votes">
@@ -59,6 +63,13 @@ router.get('/apage', function(req, res,next){
 
               ${postdata}
 
+              ${postdata}
+
+              ${postdata}
+
+              ${postdata}
+
+
           </main>
           <section>
               <h2>Ask a Question</h2>
@@ -77,7 +88,9 @@ router.get('/apage', function(req, res,next){
   res.send(pagedata);
 });
 
-router.get('/aposts', function(req, res,next){
+// Send a single HTML post
+router.get('/apost', function(req,res,next){
+
   let postdata = `<div class="post">
 
       <div class="votes">
@@ -96,52 +109,53 @@ router.get('/aposts', function(req, res,next){
   res.send(postdata);
 });
 
-let postdata = [{
-  upvotes: 123,
-  title: 'this is a post',
-  url: '#',
-  content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur maximus, lorem non varius consequat, ipsum magna vestibulum lectus, et fringilla tellus augue id nisl. Donec tempus est a hendrerit ornare. Phasellus blandit est in malesuada interdum. Mauris finibus vehicula turpis vel lobortis. Phasellus tempor elit massa. Morbi vulputate leo a neque mollis varius. Donec ultricies aliquam vulputate. Nunc dapibus lectus a risus rutrum pulvinar.',
-  tags: ['Tag1', 'Tag2'],
-  timestamp: new Date().toISOString()
-},
-{
-  upvotes: 123,
-  title: 'this is a another post',
-  url: '#',
-  content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur maximus, lorem non varius consequat, ipsum magna vestibulum lectus, et fringilla tellus augue id nisl. Donec tempus est a hendrerit ornare. Phasellus blandit est in malesuada interdum. Mauris finibus vehicula turpis vel lobortis. Phasellus tempor elit massa. Morbi vulputate leo a neque mollis varius. Donec ultricies aliquam vulputate. Nunc dapibus lectus a risus rutrum pulvinar.',
-  tags: ['Tag1', 'Tag2'],
-  timestamp: new Date().toISOString()
-}];
+let users = {
+  bob: {password: 'password'},
+  alice: {password: 'foobar'}
+};
 
-router.get('/posts.json', function(req, res,next){
+router.post('/login', function(req,res,next){
 
-  let results = db.query('SELECT Post.id Post.created, Post.content, user.display_name, Post.title, Post.answer FROM Post INNER JOIN User on POst.author = User.id;', function(result){
-    res.json(result);
-  });
-
+    if (req.body.username in users && req.body.password === users[req.body.username].password){
+      req.session.username = req.body.username;
+      console.log(req.body.username);
+      res.end();
+    } else {
+      res.sendStatus(401);
+    }
 
 });
 
+router.post('/newpost', function(req,res,next){
+  if (!('username' in req.session)){
+    res.sendStatus(403);
+    return ;
+  }
+})
 
-router.post('/newpost', function(req, res,next){
-  /*let post = req.body;
-  post.upvotes = 0;
-  post.url = '#',
-  post.timestamp = new Date().toISOString();
+router.post('/signup', function(req,res,next){
 
-  postdata.push(post);*/
+  if (req.body.username in users){
+    res.sendStatus(401);
+  } else {
+    req.session.username = req.body.username;
+    users[req.body.username] = { password: req.body.password };
+    console.log(req.body.username);
+    res.end();
+  }
 
-  /* terminate request */
-  /*res.end();*/
-  db.query(`
-  INSERT INTO Post VALUES (
-    ?,
-    CURRENT_TIMESTAMP(),
-    ?,
-    ?,
-    ?,
-    NULL
-  );`[0, 'Title', 'some content', 1]`)
 });
+
+router.post('/logout', function(req,res,next){
+
+  if ('username' in req.session){
+    delete req.session.username;
+    res.end();
+  } else {
+    res.sendStatus(403);
+  }
+
+});
+
 
 module.exports = router;

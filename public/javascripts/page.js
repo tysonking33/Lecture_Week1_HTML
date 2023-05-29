@@ -52,14 +52,14 @@ function renderPost(post_data) {
     post_content_h_a.href = post_data.url; // Link to post
     post_content_h_a.innerText = post_data.title; // Get post title from text input on page
 
-    post_content_p.innerText = post_data.content; // Get post content from textarea on page
+    post_content_p.innerText = post_data.content; // Get post content from object
 
     let post_content_tags = document.createElement('DIV');
     let post_content_date = document.createElement('SPAN');
 
     post_content_date.classList.add('date');
 
-    post_content_date.innerText = (new Date(post_data.date)).toLocaleString();
+    post_content_date.innerText = (new Date(post_data.timestamp)).toLocaleString();
 
     // Link elements together into DOM heirachy
     post_div.appendChild(vote_div);
@@ -95,38 +95,113 @@ function renderPost(post_data) {
 
 }
 
+function getPost() {
 
-function getPost(){
-    /* making a new request object */
     let req = new XMLHttpRequest();
 
-    /* defining what happens when we get the data back */
     req.onreadystatechange = function(){
-        if (req.readyState == 4 && req.status == 200){
+        if(req.readyState == 4 && req.status == 200){
             let posts = JSON.parse(req.responseText);
-            for (let post of posts){
+            for(let post of posts){
                 renderPost(post);
             }
-
         }
     };
 
-    req.open('GET', '/posts.json');
-    req.send();             /* send is empty because it is a get request */
+    req.open('GET','/users/posts.json');
+    req.send();
+
 }
 
-function newPost(){
-    /* making a new request object */
+function newPost() {
+
     let postdata = {
         title: document.getElementById('post-title').value,
         content: document.getElementById('post-content').value,
-        tags: document.getElementById('post-tags').value.split(' '),
+        tags: document.getElementById('post-tags').value.split(' ')
     };
 
+    let req = new XMLHttpRequest();
 
+    req.onreadystatechange = function(){
+        if(req.readyState == 4 && req.status == 200){
+            alert('Posted successfully');
+        } else if(req.readyState == 4 && req.status == 403){
+            alert('Not logged in');
+        }
+    };
+
+    req.open('POST','/users/newpost');
+    req.setRequestHeader('Content-Type','application/json');
+    req.send(JSON.stringify(postdata));
+
+}
+
+
+function login() {
+
+    let logindata = {
+        username: document.getElementById('login-user').value,
+        password: document.getElementById('login-pass').value
+    };
 
     let req = new XMLHttpRequest();
-    req.open('POST', '/newpost');
-    req.setRequestHeader('Content-Type', 'application/json');    //telling the serverside that this is json data
-    req.send(JSON.stringify(postdata));             /* send is empty because it is a get request */
+
+    req.onreadystatechange = function(){
+        if(req.readyState == 4 && req.status == 200){
+            alert('Logged In successfully');
+        } else if(req.readyState == 4 && req.status == 401){
+            alert('Login FAILED');
+        }
+    };
+
+    req.open('POST','/login');
+    req.setRequestHeader('Content-Type','application/json');
+    req.send(JSON.stringify(logindata));
+
+}
+
+function signup() {
+
+    let logindata = {
+        username: document.getElementById('signup-user').value,
+        password: document.getElementById('signup-pass').value
+    };
+
+    if(document.getElementById('signup-pass').value !== document.getElementById('signup-confirm').value){
+        alert("Passwords don't match");
+        return;
+    }
+
+    let req = new XMLHttpRequest();
+
+    req.onreadystatechange = function(){
+        if(req.readyState == 4 && req.status == 200){
+            alert('Signed Up successfully');
+        } else if(req.readyState == 4 && req.status == 401){
+            alert('Signed Up FAILED');
+        }
+    };
+
+    req.open('POST','/signup');
+    req.setRequestHeader('Content-Type','application/json');
+    req.send(JSON.stringify(logindata));
+
+}
+
+function logout() {
+
+    let req = new XMLHttpRequest();
+
+    req.onreadystatechange = function(){
+        if(req.readyState == 4 && req.status == 200){
+            alert('Logged Out');
+        } else if(req.readyState == 4 && req.status == 403){
+            alert('Not logged in');
+        }
+    };
+
+    req.open('POST','/logout');
+    req.send();
+
 }

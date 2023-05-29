@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -10,6 +11,7 @@
         <header>
             <button type="button">Signup</button>
             <button type="button">Login</button>
+            <button type="button" onclick="logout();">Logout</button>
             <img class="logo" src="images/logo.png" alt="WDC Overflow" />
             <ul>
                 <li>Products</li>
@@ -17,6 +19,21 @@
                 <li>Use Cases</li>
             </ul>
         </header>
+        <section id="login-form">
+            <form>
+                <label for="login-user">Username</label><input type="text" id="login-user" /><br />
+                <label for="login-pass">Password</label><input type="password" id="login-pass" />
+                <button type="button" onclick="login();">Login</button>
+            </form>
+        </section>
+        <section id="signup-form">
+            <form>
+                <label for="signup-user">Username</label><input type="text" id="signup-user" /><br />
+                <label for="signup-pass">Password</label><input type="password" id="signup-pass" /><br />
+                <label for="signup-pass">Confirm</label><input type="password" id="signup-confirm" />
+                <button type="button" onclick="signup();">Sign Up</button>
+            </form>
+        </section>
         <main>
 
             <div class="search">
@@ -25,6 +42,9 @@
                 <button type="button" class="right">Search</button>
                 <input type="text" name="search" />
             </div>
+
+
+
 
         </main>
         <section>
