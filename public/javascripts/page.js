@@ -80,7 +80,6 @@ function renderPost(post_data) {
     post_content_h.appendChild(post_content_h_a);
 
     // generate tags
-    //let taglist = document.getElementById('post-tags').value.split(' '); // Get post tags from text input on page, then split them on spaces into an array. See https://www.w3schools.com/jsref/jsref_split.asp
     let taglist = post_data.tags;
     for(let t of taglist){
         let tag = document.createElement('SPAN'); // Create a span for each tag in list/array
@@ -100,7 +99,7 @@ function getPost() {
     let req = new XMLHttpRequest();
 
     req.onreadystatechange = function(){
-        if(req.readyState == 4 && req.status == 200){
+        if(req.readyState === 4 && req.status === 200){
             let posts = JSON.parse(req.responseText);
             for(let post of posts){
                 renderPost(post);
@@ -203,5 +202,33 @@ function logout() {
 
     req.open('POST','/logout');
     req.send();
+
+}
+
+
+
+function do_google_login(response){
+
+    // Sends the login token provided by google to the server for verification using an AJAX request
+
+    console.log(response);
+
+    // Setup AJAX request
+    let req = new XMLHttpRequest();
+
+    req.onreadystatechange = function(){
+        // Handle response from our server
+        if(req.readyState == 4 && req.status == 200){
+            alert('Logged In with Google successfully');
+        } else if(req.readyState == 4 && req.status == 401){
+            alert('Login FAILED');
+        }
+    };
+
+    // Open requst
+    req.open('POST','/login');
+    req.setRequestHeader('Content-Type','application/json');
+    // Send the login token
+    req.send(JSON.stringify(response));
 
 }

@@ -6,6 +6,7 @@
         <title>WDC Overflow</title>
         <link rel="stylesheet" href="stylesheets/style.css" >
         <script src="javascripts/page.js"></script>
+        <script src="https://accounts.google.com/gsi/client" async defer></script>
     </head>
     <body onload="getPost()">
         <header>
@@ -25,6 +26,24 @@
                 <label for="login-pass">Password</label><input type="password" id="login-pass" />
                 <button type="button" onclick="login();">Login</button>
             </form>
+
+            <div id="g_id_onload"
+                data-client_id="902656236116-hv58j5ovr7b6lf8a5bgokrsqmob14946.apps.googleusercontent.com"
+                data-context="signin"
+                data-ux_mode="popup"
+                data-callback="do_google_login"
+                data-auto_prompt="false">
+            </div>
+
+            <div class="g_id_signin"
+                data-type="standard"
+                data-shape="rectangular"
+                data-theme="filled_black"
+                data-text="signin_with"
+                data-size="medium"
+                data-logo_alignment="left">
+            </div>
+
         </section>
         <section id="signup-form">
             <form>
