@@ -7,7 +7,6 @@ var mysql = require('mysql');
 
 var dbConnectionPool = mysql.createPool({ host: 'localhost', database: 'WDCOverflow'});
 
-
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
@@ -18,12 +17,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use(function(req, res, next){
+app.use(function(req, res, next) {
     req.pool = dbConnectionPool;
     next();
 });
 
-// Setup session
 app.use(session({
     resave: false,
     saveUninitialized: true,

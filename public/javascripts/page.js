@@ -80,13 +80,14 @@ function renderPost(post_data) {
     post_content_h.appendChild(post_content_h_a);
 
     // generate tags
-    let taglist = post_data.tags;
-    for(let t of taglist){
-        let tag = document.createElement('SPAN'); // Create a span for each tag in list/array
-        tag.innerText = t;
-        tag.classList.add('tag');
-        post_content_tags.appendChild(tag); // Add to the tags div
-    }
+    //let taglist = document.getElementById('post-tags').value.split(' '); // Get post tags from text input on page, then split them on spaces into an array. See https://www.w3schools.com/jsref/jsref_split.asp
+    // let taglist = post_data.tags;
+    // for(let t of taglist){
+    //     let tag = document.createElement('SPAN'); // Create a span for each tag in list/array
+    //     tag.innerText = t;
+    //     tag.classList.add('tag');
+    //     post_content_tags.appendChild(tag); // Add to the tags div
+    // }
     post_content_tags.appendChild(post_content_date);
 
     // Insert into page
